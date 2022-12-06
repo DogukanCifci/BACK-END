@@ -114,7 +114,7 @@ print(person4.set_name)
 
 
 #-----------#-----------#-----------#-----------#-----------
-
+'''
 class Person : 
     name = "Marie"
     surname = "Curie"
@@ -128,3 +128,63 @@ class Person :
     @staticmethod
     def static_method() :
         print("Merhaba verileri cagirmadan burda staticmethod kullandik.")
+
+'''
+
+#-----------#-----------#-----------#-----------#-----------
+# Constructor Methods : 
+'''
+class Person : 
+    name = "Marie"
+    surname = "Curie"
+
+    # Constructor Method 
+    def __init__(self):
+        print("Class cagirildi!")
+    # Varsayilan yazilacak veri ___str__ ile belirlenir. __str__ isminin yerine baska bir isim kullanamam.
+    def __str__(self):
+        return self.name + " " + self.surname
+    #Person classindan olusturulmus bir object direk cagirildiginda normalde <__main class ...> gibi bi sey yaziyor. Ben onun yerine cagirildiginda direk ne yzamasini istiyorsam __str__ fonksiyonunun icine yazabilirim.
+
+person6 = Person() #__init__ bu asamada direk geldi
+print(person6) # __str__ 'de bu asamada geldi.
+
+
+'''
+
+#-----------#-----------#-----------#-----------#-----------
+#Encapsulation and Abstraction
+
+#-----------#-----------#-----------#-----------#-----------
+# Inheritance and Polymorphism
+
+class Person : 
+    name = "Marie"
+    surname = "Curie"
+
+    def get_name(self) : 
+        return self.name + " " + self.surname
+    
+    def set_name(self, new_name,new_surname) :
+        self.name = new_name
+        self.surname = new_surname
+
+class Employee(Person) : # Inheritance --> # Baska bir classin özelliklerini miras alarak yeni bir class olusturmak istersem Parantezin icine miras alacagimiz olan class'in ismini yazariz.
+    salary = "5000"
+
+    """ def set_name(self,salary) :
+        self.salary = salary """ # Böyle bir sey yaparsam bir önceki  set_name  ezmisolurum.
+    #Onun icin su sekilde yazmaliyim
+    def set_name(self, new_name, new_surname,salary):
+        super().set_name(new_name, new_surname)
+        self.salary = salary
+
+    def get_name(self):
+        return f"{self.name} {self.surname} {self.salary}"
+
+employee1 = Employee()
+print(employee1.name + " " + employee1.surname + " " + employee1.salary)
+print(employee1.get_name())
+
+employee1.set_name("Dogukan", "Cifci", "10000")
+print(employee1.get_name())
