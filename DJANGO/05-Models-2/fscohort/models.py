@@ -2,10 +2,15 @@ from django.db import models
 
 # Create your models here.
 class Student(models.Model) :
-    first_name = models.CharField(max_length=50, default="")
+    first_name = models.CharField(max_length=50, default="") #input text
     last_name=models.CharField(max_length=50, default="")
-    number = models.IntegerField(default=0)
-
+    number = models.IntegerField(default=0) #input number
+    about = models.TextField(default="", null=True, blank=True) #null=True demek ici bos olabilir demek, blank=true bos icerik olabilir demek
+ # textarea
+    exists = models.BooleanField(default=True) # select
+    date = models.DateField(null=True, blank=True) # input:date
+    email = models.EmailField(null=True, blank=True) # input:email
+    avatar = models.ImageField(null=True, blank=True, upload_to='images/') # input:file
 #Bir model eklendiginde/degistirildiginde asagidaki komutlari unutmamamiz gerekiyor.
 #makemigrations
 #migrate
@@ -40,4 +45,6 @@ class Student(models.Model) :
     > objname = Student.objects.filter(last_name__contains='a') # lastname 'a' içeren kayıtları getir (liste)
     > objname = Student.objects.exclude(number=5) # Number=5 olMAyan kayıtları getir (liste)
     > objname = Student.objects.exclude(last_name__contains='a') # lastname 'a' içerMEyen kayıtları getir (liste)
+    > objname = Student(first_name="Muhammed" , last_name="Mustafa", number=1) # DB'den bagimsiz instance(object)
+    > objname.save() # Tek kayit olarak gelen objectdeki degisikliklieri veritabaninda da günceller.
 '''
