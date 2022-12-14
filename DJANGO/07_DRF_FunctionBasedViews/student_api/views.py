@@ -49,7 +49,7 @@ def students_create(request) :
     else : 
         return Response({
             "message" : "Data not Validated!"
-        })
+        }status = status.HTTP_400_BAD_REQUEST)
 
 
 #---------------#---------------#---------------#---------------
