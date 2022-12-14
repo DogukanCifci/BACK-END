@@ -49,7 +49,7 @@ def students_create(request) :
     else : 
         return Response({
             "message" : "Data not Validated!"
-        }status = status.HTTP_400_BAD_REQUEST)
+        },status = status.HTTP_400_BAD_REQUEST)
 
 
 #---------------#---------------#---------------#---------------
@@ -59,7 +59,40 @@ def students_create(request) :
 
 @api_view(['GET'])
 def student_detail(request,pk):
-    student = Student.object.get(id=pk)
+    student = Student.objects.get(id=pk)
     serializer = StudentSerializer(student)
     return Response(serializer.data)
 
+#---------------#---------------#---------------#---------------
+#DRF FUNCTION PUT
+# StudentSerializer Tek Kayit Güncelleme
+#---------------#---------------#---------------#---------------
+@api_view(['PUT'])
+def student_update(request,pk) :
+    student = Student.objects.get(id=pk) 
+    serializer = StudentSerializer(data=request.data, instance=student)
+    if serializer.is_valid():
+        serializer.save()
+        return Response({
+            "status" : True,
+            "message" : "Updated Successfully!"
+        },status = status.HTTP_202_ACCEPTED)
+    else : 
+        return Response({
+            "status" : False,
+            "message" : "Data not Validated!"
+        },status = status.HTTP_400_BAD_REQUEST)
+
+
+
+#---------------#---------------#---------------#---------------
+# StudentSerializer Tek Kayit Silme
+#---------------#---------------#---------------#---------------
+@api_view(['DELETE'])
+def student_delete(request,pk) :
+    student = Student.objects.get(id=pk)
+    student.delete()
+    return Response({
+        "status": True,
+        "message" : "Deleted Successfully",
+    }, status = status.HTTP_204_NO_CONTENT)
