@@ -1,6 +1,9 @@
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
+from rest_framework.decorators import action
+
+
 #Temel API Görüntüleme
 @api_view()
 def home(request) :
@@ -173,6 +176,7 @@ from .models import Student
 from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
 from rest_framework.generics import mixins,GenericAPIView, ListCreateAPIView,RetrieveUpdateDestroyAPIView
+from rest_framework.viewsets import ModelViewSet
 
 class StudentListCreate(APIView) :
     def get(self,request) :
@@ -271,3 +275,32 @@ class StudentCV(ListCreateAPIView) :
 class StudentDetailCV(RetrieveUpdateDestroyAPIView) :
     queryset = Student.objects.all()
     serializer_class = StudentSerializer
+
+#Bu kadar code ile yukardaki her seyi yapabiliriz. Cünkü django yukardakileri bu yazdgimizin icinde gizli class olarak yazmis
+
+
+
+##################### Model View Set ############################
+class StudentMVS(ModelViewSet) :
+    queryset = Student.objects.all()
+    serializer_class = StudentSerializer
+
+    #Ekstra olarak action eklemek sitersek sadece ModelViewSetlerde action kulllanilabiliyor.
+    @action(detail=False, methods=['GET'])
+    def student_count(self, request) : 
+        count = {
+            'student_count' : self.queryset.count()
+        }
+        return Response(count)
+
+    @action(detail=True, methods=['GET'])
+    def check_student(self,request,pk) :
+        student = get_object_or_404(Student, pk=pk)
+        if student.first_name.startswith('C') :
+            return Response({
+                'name' : "asdasdasdas"
+            }) 
+        else : 
+            return Response({
+                "false" : "False"
+            })

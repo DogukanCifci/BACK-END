@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path,include
 #from .views import home, student_list,students_create,student_detail,student_update,student_delete,student_list_create,student_detail_update_delete
 
 #-----------------------------------FBV-----------------------------------
@@ -23,7 +23,10 @@ urlpatterns = [
 #-----------------------------------#-----------------------------------
 #-----------------------------------CBV-----------------------------------
 #-----------------------------------#-----------------------------------
-from .views import StudentListCreate,home,StudentDetail,StudentGAV,StudentDetailGAV,StudentCV,StudentDetailCV
+from .views import StudentListCreate,home,StudentDetail,StudentGAV,StudentDetailGAV,StudentCV,StudentDetailCV,StudentMVS
+from rest_framework import routers
+router = routers.DefaultRouter()
+router.register('studentmvs', StudentMVS)
 
 urlpatterns = [
     path('', home),
@@ -32,5 +35,6 @@ urlpatterns = [
     path('studentgav/', StudentGAV.as_view()),
     path('studentdetailgav/<int:pk>/', StudentDetailGAV.as_view()),
     path('studentcv/', StudentCV.as_view()),
-    path('studentdetailcv/<int:pk>/', StudentDetailCV.as_view())
+    path('studentdetailcv/<int:pk>/', StudentDetailCV.as_view()),
+    path('', include(router.urls))
 ]
