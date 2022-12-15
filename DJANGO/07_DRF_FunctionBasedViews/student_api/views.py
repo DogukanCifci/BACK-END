@@ -172,7 +172,7 @@ from .serializers import StudentSerializer
 from .models import Student
 from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
-from rest_framework.generics import mixins,GenericAPIView
+from rest_framework.generics import mixins,GenericAPIView, ListCreateAPIView,RetrieveUpdateDestroyAPIView
 
 class StudentListCreate(APIView) :
     def get(self,request) :
@@ -258,3 +258,16 @@ class StudentDetailGAV(
 
     def delete(self, request, *args, **kwargs):
         return self.destroy(request, *args, **kwargs)
+
+
+
+
+##################### Concrete Views ############################
+
+class StudentCV(ListCreateAPIView) :
+    queryset = Student.objects.all()
+    serializer_class = StudentSerializer
+
+class StudentDetailCV(RetrieveUpdateDestroyAPIView) :
+    queryset = Student.objects.all()
+    serializer_class = StudentSerializer
