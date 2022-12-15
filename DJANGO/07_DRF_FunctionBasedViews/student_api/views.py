@@ -1,7 +1,6 @@
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
-from rest_framework.views import APIView
 #Temel API Görüntüleme
 @api_view()
 def home(request) :
@@ -172,6 +171,8 @@ def student_detail_update_delete(request,pk) :
 from .serializers import StudentSerializer
 from .models import Student
 from django.shortcuts import get_object_or_404
+from rest_framework.views import APIView
+from rest_framework.generics import mixins,GenericAPIView
 
 class StudentListCreate(APIView) :
     def get(self,request) :
@@ -216,3 +217,44 @@ class StudentDetail(APIView) :
             "message" : "Data deleted successfully!"
         }
         return Response(data)
+
+
+
+#############################------- GENERIC APIView ---------###############################
+
+class StudentGAV(
+    mixins.RetrieveModelMixin,
+    mixins.ListModelMixin,
+    mixins.CreateModelMixin,
+    GenericAPIView
+    ) :
+
+    queryset = Student.objects.all()
+    serializer_class = StudentSerializer
+
+    def get(self,request,*args, **kwargs) :
+        return self.list(request,*args, **kwargs)
+    
+    def post(self,request,*args, **kwargs) :
+        return self.create(request,*args, **kwargs)
+
+
+
+class StudentDetailGAV(
+    mixins.RetrieveModelMixin,
+    mixins.UpdateModelMixin,
+    mixins.DestroyModelMixin,
+    GenericAPIView
+):
+
+    queryset = Student.objects.all()
+    serializer_class = StudentSerializer
+
+    def get(self, request, *args, **kwargs):
+        return self.retrieve(request, *args, **kwargs)
+
+    def put(self, request, *args, **kwargs):
+        return self.update(request, *args, **kwargs)
+
+    def delete(self, request, *args, **kwargs):
+        return self.destroy(request, *args, **kwargs)

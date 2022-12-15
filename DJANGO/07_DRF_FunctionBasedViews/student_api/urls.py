@@ -23,10 +23,12 @@ urlpatterns = [
 #-----------------------------------#-----------------------------------
 #-----------------------------------CBV-----------------------------------
 #-----------------------------------#-----------------------------------
-from .views import StudentListCreate,home,StudentDetail
+from .views import StudentListCreate,home,StudentDetail,StudentGAV,StudentDetailGAV
 
 urlpatterns = [
     path('', home),
     path('student/', StudentListCreate.as_view()), ##Class base kullandigimizda as_view her türlü kullanilmali
-    path('student/<int:pk>/', StudentDetail.as_view())
+    path('student/<int:pk>/', StudentDetail.as_view()),
+    path('studentgav/', StudentGAV.as_view()),
+    path('studentdetailgav/<int:pk>/', StudentDetailGAV.as_view())
 ]
