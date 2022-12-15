@@ -1,7 +1,7 @@
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
-
+from rest_framework.views import APIView
 #Temel API Görüntüleme
 @api_view()
 def home(request) :
@@ -25,6 +25,7 @@ def home(request) :
 #DRF FUNCTION VIEWS
 #---------------#---------------#---------------#---------------
 
+'''
 from .serializers import StudentSerializer
 from .models import Student
 
@@ -79,11 +80,12 @@ def student_update(request,pk) :
             "message" : "Updated Successfully!"
         },status = status.HTTP_202_ACCEPTED)
     else : 
-        return Response({
-            "status" : False,
-            "message" : "Data not Validated!"
-        },status = status.HTTP_400_BAD_REQUEST)
+       # return Response({
+           # "status" : False,
+           # "message" : "Data not Validated!"
+      #  },status = status.HTTP_400_BAD_REQUEST)
 
+        return Response({"data" : serializer.data, "message" : serializer.errors}, status = status.HTTP_400_BAD_REQUEST)
 
 
 #---------------#---------------#---------------#---------------
@@ -159,4 +161,58 @@ def student_detail_update_delete(request,pk) :
         "status": True,
         "message" : "Deleted Successfully",
     }, status = status.HTTP_204_NO_CONTENT)
-    
+    '''
+
+
+
+
+#-----------------------------------#-----------------------------------
+#-----------------------------------CBV-----------------------------------
+#-----------------------------------#-----------------------------------
+from .serializers import StudentSerializer
+from .models import Student
+from django.shortcuts import get_object_or_404
+
+class StudentListCreate(APIView) :
+    def get(self,request) :
+        students = Student.objects.all()
+        serializer = StudentSerializer(students, many = True)
+        return Response(serializer.data)
+    def post(self,request) :
+        serializer = StudentSerializer(data= request.data)
+        if serializer.is_valid() :
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else :
+            return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
+
+
+class StudentDetail(APIView) :
+
+    def get_obj(self,pk) :
+        return get_object_or_404(Student, id=pk) #try_except yapmak yerine bunu kullandik. Eger olmayan id ile bir sey cagirisak hata vermez. Diger türlü try-except kullanmaliydim
+        """ try :
+            student = Student.objects.get(id=pk)
+        except :
+            return Response(serializer.errors) """
+    def get(self,request,pk) : 
+        student = self.get_obj(pk)
+        serializer = StudentSerializer(student)
+        return Response(serializer.data)
+
+    def put(self,request,pk) :
+        student = self.get_obj(pk)
+        serializer = StudentSerializer(student)
+        if serializer.is_valid() :
+            serializer.save()
+            return Response(serializer.data)
+        else :
+            return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
+        
+    def delete(self,request,pk) : 
+        student = self.get_obj(pk)
+        student.delete()
+        data = {
+            "message" : "Data deleted successfully!"
+        }
+        return Response(data)
