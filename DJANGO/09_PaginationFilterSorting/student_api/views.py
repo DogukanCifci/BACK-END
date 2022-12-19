@@ -275,7 +275,7 @@ from .pagination import (
 
 from django_filters.rest_framework import DjangoFilterBackend ##.......--->Filtreleme icin import(Localde ayar yapmak icin)
 
-from rest_framework.filters import SearchFilter ###->Kelime veya numara icindeki sayi ya da harfe göre filtreleme. Yani Ahmet icin e yazdigimizda Ahmeti de gösterir. Ama bir önceki filtrelemede direk Ahmet yazmam gerekiyordu.
+from rest_framework.filters import SearchFilter,OrderingFilter ###->Kelime veya numara icindeki sayi ya da harfe göre filtreleme. Yani Ahmet icin e yazdigimizda Ahmeti de gösterir. Ama bir önceki filtrelemede direk Ahmet yazmam gerekiyordu.  OrderingFilter --->Siralamak icin
 
 class StudentMVS(ModelViewSet):
     queryset = Student.objects.all()
@@ -285,11 +285,13 @@ class StudentMVS(ModelViewSet):
     #Burada hangi pagination_class secersek ona göre düzenleme olur
 
     #FILTER ICIN 
-    filter_backends = [DjangoFilterBackend, SearchFilter] # Local filtreleme kullanmak icin ===> SearchFilter icinde aramak icin ---- DjangoFilterBackend 1-1 arama yapmak icin
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter] # Local filtreleme kullanmak icin ===> SearchFilter icinde aramak icin ---- DjangoFilterBackend 1-1 arama yapmak icin
     filterset_fields = ['id', 'first_name','last_name','path','number'] #1-1 arama yapar
 
     search_fields = ['first_name', 'last_name'] #Icinde arama yapar.
 
+    ordering_fields = ['first_name','last_name', 'number']
+    #ordering_fields = __all__ ##..>>>> Bu sekilde de yazabilirim
 
     @action(detail=False, methods=['GET'])
     def student_count(self, request):
