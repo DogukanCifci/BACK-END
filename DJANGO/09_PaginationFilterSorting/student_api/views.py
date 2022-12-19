@@ -268,15 +268,16 @@ class StudentDetailCV(RetrieveUpdateDestroyAPIView):
 
 
 ############ ModelViewSet #############
+from .pagination import *     #----->>>>>>> Kisisel sayfalandirma(local) icin kendi olusturdugum Pagination'u pagination.py'den import ettim
 
 class StudentMVS(ModelViewSet):
     queryset = Student.objects.all()
     serializer_class = StudentSerializer
-
+    pagination_class = CustomPageNumberPagination
     @action(detail=False, methods=['GET'])
     def student_count(self, request):
         count = {
-            'studen-count': self.queryset.count()
+            'student-count': self.queryset.count()
         }
         return Response(count)
 

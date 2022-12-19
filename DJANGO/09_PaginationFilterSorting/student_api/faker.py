@@ -4,11 +4,11 @@ from faker import Faker
 def run():
     '''
         # https://faker.readthedocs.io/en/master/
-        $ pip install faker # install faker module
-        python manage.py flush # delete exists
-        python manage.py shell
-        from student_api.faker import run
-        run()
+        $ pip install faker                    # install faker module
+        python manage.py flush                 # delete exists data #admini'de siler.
+        python manage.py shell                 #->>>terminalde shell ortamina gitme amaciyla 
+        from student_api.faker import run      #>>>>run fonksiyonunu calistirmak icin import ediyoruz.
+        run()                                  #-->run fonksiyonunu calistirdik
         exit()
     '''
 
