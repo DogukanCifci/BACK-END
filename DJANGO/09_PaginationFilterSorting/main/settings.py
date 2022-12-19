@@ -128,6 +128,14 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 #My Imports 
 
 REST_FRAMEWORK = {
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 20 # Sayfa basi kayit sayisi
+    #------ 1.METHOD (PAGE NUMBER PAGINATION) (GLOBAL ICIN) ---------
+    # 'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    #'PAGE_SIZE': 20, # Sayfa basi kayit sayisi
+    #Keywordler ----> ....../?page=2   ....../?page=5   -->Her bir page'e belli sayida data sinirir koyuyoruz. Ve sayfa olarak hangi sayfaya gitmek istedigimizi seciyoruz.
+    
+    
+    #------ 2.METHOD (LIMIT OFFSET) (GLOBAL ICIN) ---------
+    #'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    #'PAGE_SIZE': 20
+    #Keywordler = ...../?limit=15&offset=30 offset anlami 30.kayittan itibaren limit ise 15tane kayit getir demek.
 }
