@@ -269,16 +269,27 @@ class StudentDetailCV(RetrieveUpdateDestroyAPIView):
 
 ############ ModelViewSet #############
 from .pagination import (
-   # CustomPageNumberPagination,
-    CustomLimitOffsetPagination
+    CustomPageNumberPagination,
+   CustomLimitOffsetPagination,
 )     #----->>>>>>> Kisisel sayfalandirma(local) icin kendi olusturdugum Pagination'u pagination.py'den import ettim
+
+from django_filters.rest_framework import DjangoFilterBackend ##.......--->Filtreleme icin import(Localde ayar yapmak icin)
+
+from rest_framework.filters import SearchFilter ###->Kelime veya numara icindeki sayi ya da harfe göre filtreleme. Yani Ahmet icin e yazdigimizda Ahmeti de gösterir. Ama bir önceki filtrelemede direk Ahmet yazmam gerekiyordu.
 
 class StudentMVS(ModelViewSet):
     queryset = Student.objects.all()
     serializer_class = StudentSerializer
-    # pagination_class = CustomPageNumberPagination #------>>>>>> 1. METHOD LOCAL ICIN
-    pagination_class = CustomLimitOffsetPagination  #------>>>>>> 2. METHOD LOCAL ICIN
-    
+    pagination_class = CustomPageNumberPagination     #------>>>>>> 1. METHOD LOCAL ICIN
+    #pagination_class = CustomLimitOffsetPagination    #------>>>>>> 2. METHOD LOCAL ICIN
+    #Burada hangi pagination_class secersek ona göre düzenleme olur
+
+    #FILTER ICIN 
+    filter_backends = [DjangoFilterBackend, SearchFilter] # Local filtreleme kullanmak icin ===> SearchFilter icinde aramak icin ---- DjangoFilterBackend 1-1 arama yapmak icin
+    filterset_fields = ['id', 'first_name','last_name','path','number'] #1-1 arama yapar
+
+    search_fields = ['first_name', 'last_name'] #Icinde arama yapar.
+
 
     @action(detail=False, methods=['GET'])
     def student_count(self, request):

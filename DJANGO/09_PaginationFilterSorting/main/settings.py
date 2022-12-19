@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'student_api',
     'rest_framework',
+    #my apps
+    'django_filters',
 ]
 
 MIDDLEWARE = [
@@ -134,8 +136,19 @@ REST_FRAMEWORK = {
     #Keywordler ----> ....../?page=2   ....../?page=5   -->Her bir page'e belli sayida data sinirir koyuyoruz. Ve sayfa olarak hangi sayfaya gitmek istedigimizi seciyoruz.
     
     
-    #------ 2.METHOD (LIMIT OFFSET) (GLOBAL ICIN) ---------
+    #------ 2.METHOD (LIMIT OFFSET PAGINATION) (GLOBAL ICIN) ---------
     #'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
     #'PAGE_SIZE': 20
     #Keywordler = ...../?limit=15&offset=30 offset anlami 30.kayittan itibaren limit ise 15tane kayit getir demek.
+
+    #------ 3.METHOD (CURSOR PAGINATION) (GLOBAL ICIN) ---------
+    # 'DEFAULT_PAGINATION_CLASS': 'my_project.apps.core.pagination.CursorPagination',
+    #'PAGE_SIZE': 100
+
+    # ======================= FILTER ICIN ========================= 
+    #'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']  ,  # 1-1 arama icin 
+    'DEFAULT_FILTER_BACKENDS': ['rest_framework.filters.SearchFilter']    , #####Icinde Arama Icin
+    #'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend','rest_framework.filters.SearchFilter'] #Her ikisini de ayni anda kullanmak icin bu sekilde yazabiliriz.
 }
+
+  
