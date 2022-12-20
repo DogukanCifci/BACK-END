@@ -160,8 +160,8 @@ REST_FRAMEWORK = {
 
     #Kullanici PERMISSON ;
     #1.
-   # 'DEFAULT_PERMISSION_CLASSES': ['rest_framework.permissions.IsAuthenticated',], # Sistemin kullanilmasi icin herhangi bir kullanicinin giris yapmasi gerekir.
+    'DEFAULT_PERMISSION_CLASSES': ['rest_framework.permissions.IsAuthenticated',], # Sistemin kullanilmasi icin herhangi bir kullanicinin giris yapmasi gerekir.
    #2.
-    'DEFAULT_PERMISSION_CLASSES': ['rest_framework.permissions.IsAdminUser',], #Sadece admin giris yaptiginda sistemi kullanabilir. Normal kullanici sistemi kullanamaz (GLOBAL'DE BU SEKILDE TANIMLAYABILIRIZ.)
+  #  'DEFAULT_PERMISSION_CLASSES': ['rest_framework.permissions.IsAdminUser',], #Sadece admin giris yaptiginda sistemi kullanabilir. Normal kullanici sistemi kullanamaz (GLOBAL'DE BU SEKILDE TANIMLAYABILIRIZ.)
 }
 

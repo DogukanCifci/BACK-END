@@ -275,8 +275,12 @@ from .pagination import (
     CustomCursorPagination,
 )
 
+######------------IMPORTS--------------
+
 from django_filters.rest_framework import DjangoFilterBackend # External Module
 from rest_framework.filters import SearchFilter, OrderingFilter # Internal Modules
+from rest_framework.permissions import IsAdminUser,IsAuthenticated,IsAuthenticatedOrReadOnly #Authentication ve Permission icin importum
+from .permissions import CustomIsAdminOrReadOnly #Kendi olusturdugum fonksiyon
 
 class StudentMVS(ModelViewSet):
     queryset = Student.objects.all().order_by('-id') # Default Sorting. Ordering yapmaz.
@@ -289,6 +293,13 @@ class StudentMVS(ModelViewSet):
     search_fields = ['first_name', 'last_name'] # Arama yapılacak fieldlar. İçinde (LIKE '%%') arama yapar.
     ordering_fields = ['id', 'first_name', 'last_name', 'number'] # Sıralamaya izin verilenler.
     
+    #--------AUTHENTICATION------- ;
+    #Genelde globalde tanimlanmasi yeterlidir.
+    
+    #-----PERMISSION------ ;
+    permission_classes = [IsAdminUser] # Sadece adminler ulasabilir. (Gerekli importlari yaptiktan sonra local'de bu sekilde tanimlayabiliriz.)
+
+    #permission_classes = [CustomIsAdminOrReadOnly] #-->Kendi olusturdugum izin yöntemini kullanmak istersem bunu yazarim
 
     @action(detail=False, methods=['GET'])
     def student_count(self, request):
