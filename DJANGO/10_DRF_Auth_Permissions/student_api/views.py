@@ -268,31 +268,27 @@ class StudentDetailCV(RetrieveUpdateDestroyAPIView):
 
 
 ############ ModelViewSet #############
+
 from .pagination import (
     CustomPageNumberPagination,
-   CustomLimitOffsetPagination,
-)     #----->>>>>>> Kisisel sayfalandirma(local) icin kendi olusturdugum Pagination'u pagination.py'den import ettim
+    CustomLimitOffsetPagination,
+    CustomCursorPagination,
+)
 
-from django_filters.rest_framework import DjangoFilterBackend ##.......--->Filtreleme icin import(Localde ayar yapmak icin)
-
-from rest_framework.filters import SearchFilter,OrderingFilter ###->Kelime veya numara icindeki sayi ya da harfe göre filtreleme. Yani Ahmet icin e yazdigimizda Ahmeti de gösterir. Ama bir önceki filtrelemede direk Ahmet yazmam gerekiyordu.  OrderingFilter --->Siralamak icin
+from django_filters.rest_framework import DjangoFilterBackend # External Module
+from rest_framework.filters import SearchFilter, OrderingFilter # Internal Modules
 
 class StudentMVS(ModelViewSet):
-    #keywordleri degistiremem. Bunlar djangonun kendi kütüphanesinde tanimlilar.
-    queryset = Student.objects.all().order_by('id') #.ordering('..') default olarak id'yegöre sirala demek
+    queryset = Student.objects.all().order_by('-id') # Default Sorting. Ordering yapmaz.
     serializer_class = StudentSerializer
-    pagination_class = CustomPageNumberPagination     #------>>>>>> 1. METHOD LOCAL ICIN
-    #pagination_class = CustomLimitOffsetPagination    #------>>>>>> 2. METHOD LOCAL ICIN
-    #Burada hangi pagination_class secersek ona göre düzenleme olur
-
-    #FILTER ICIN 
-    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter] # Local filtreleme kullanmak icin ===> SearchFilter icinde aramak icin ---- DjangoFilterBackend 1-1 arama yapmak icin
-    filterset_fields = ['id', 'first_name','last_name','path','number'] #1-1 arama yapar
-
-    search_fields = ['first_name', 'last_name'] #Icinde arama yapar.
-
-    ordering_fields = ['first_name','last_name', 'number'] # Siralama yapmak icin
-   
+    pagination_class = CustomPageNumberPagination
+    # pagination_class = CustomLimitOffsetPagination
+    # pagination_class = CustomCursorPagination
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter] # not in str()
+    filterset_fields = ['id', 'number', 'first_name'] # Filtreleme yapılacak fieldlar. 1=1 arama yapar.
+    search_fields = ['first_name', 'last_name'] # Arama yapılacak fieldlar. İçinde (LIKE '%%') arama yapar.
+    ordering_fields = ['id', 'first_name', 'last_name', 'number'] # Sıralamaya izin verilenler.
+    
 
     @action(detail=False, methods=['GET'])
     def student_count(self, request):
