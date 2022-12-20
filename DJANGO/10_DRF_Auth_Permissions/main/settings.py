@@ -151,7 +151,7 @@ REST_FRAMEWORK = {
     
     #!!!!POSTMAN'DE  Authorization basligina gidip orada no Auth'u Basic Auth'a cevirmem gerekiyor.!!!!Dikkat etmem gereken eger token ile giris yaptiracaksam bunu No Auth secmeliyim. Yoksa Headers'da iki tane Authorization key'i oluyor ve hata veriyor.
 
-    
+
     #3.
     'DEFAULT_AUTHENTICATION_CLASSES': ['rest_framework.authentication.TokenAuthentication'], #Kullanici sadece token ile giris yapabilir.
 
@@ -162,6 +162,6 @@ REST_FRAMEWORK = {
     #1.
    # 'DEFAULT_PERMISSION_CLASSES': ['rest_framework.permissions.IsAuthenticated',], # Sistemin kullanilmasi icin herhangi bir kullanicinin giris yapmasi gerekir.
    #2.
-    'DEFAULT_PERMISSION_CLASSES': ['rest_framework.permissions.IsAdminUser',], #Sadece admin giris yaptiginda sistemi kullanabilir. Normal kullanici sistemi kullanamaz
+    'DEFAULT_PERMISSION_CLASSES': ['rest_framework.permissions.IsAdminUser',], #Sadece admin giris yaptiginda sistemi kullanabilir. Normal kullanici sistemi kullanamaz (GLOBAL'DE BU SEKILDE TANIMLAYABILIRIZ.)
 }
 
