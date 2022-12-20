@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     'student_api',
     'rest_framework',
     'django_filters',
+    #Authentication icin benim yükledigim,
+    'rest_framework.authtoken',
 ]
 
 MIDDLEWARE = [
@@ -140,9 +142,26 @@ REST_FRAMEWORK = {
     # 'DEFAULT_FILTER_BACKENDS': ['rest_framework.filters.OrderingFilter'],
     # 'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend', 'rest_framework.filters.SearchFilter']
 
-    #Authentication icin ;
-    'DEFAULT_AUTHENTICATION_CLASSES': ['rest_framework.authentication.BasicAuthentication',], #Kullanici giris yöntemini belirleme
-    'DEFAULT_PERMISSION_CLASSES': ['rest_framework.permissions.IsAuthenticated',], #Bir kullanicinin giris yapmis olmasi gerekir. Kullanim yapabilmesi icin
-    'DEFAULT_PERMISSION_CLASSES': ['rest_framework.permissions.IsAuthenticated',], #Sadece admin giris yaptiginda sistemi kullanabilir
+    #AUTHENTICATION icin ;
+    #1.
+    #'DEFAULT_AUTHENTICATION_CLASSES': ['rest_framework.authentication.BasicAuthentication',], #Kullanici giris yöntemini belirleme. Sadece ad-sifre ile girilebilir.
+
+    #2.
+    #'DEFAULT_AUTHENTICATION_CLASSES': ['rest_framework.authentication.IsAuthenticatedOrReadOnly',], #Kullanici giris yöntemini belirleme. Kullanici giris yapmazsa sadece veriyi okuma izni olsun. Kullanici giris yaptiysa diger özelliklere'de erisim izni olsun.
+    
+    #!!!!POSTMAN'DE  Authorization basligina gidip orada no Auth'u Basic Auth'a cevirmem gerekiyor.!!!!Dikkat etmem gereken eger token ile giris yaptiracaksam bunu No Auth secmeliyim. Yoksa Headers'da iki tane Authorization key'i oluyor ve hata veriyor.
+
+    
+    #3.
+    'DEFAULT_AUTHENTICATION_CLASSES': ['rest_framework.authentication.TokenAuthentication'], #Kullanici sadece token ile giris yapabilir.
+
+    #!!!POSTMAN'de header kismina gelip orada Key : Authorization karsisina da '''Token token_key''' yazmaliyiz.
+
+
+    #Kullanici PERMISSON ;
+    #1.
+   # 'DEFAULT_PERMISSION_CLASSES': ['rest_framework.permissions.IsAuthenticated',], # Sistemin kullanilmasi icin herhangi bir kullanicinin giris yapmasi gerekir.
+   #2.
+    'DEFAULT_PERMISSION_CLASSES': ['rest_framework.permissions.IsAdminUser',], #Sadece admin giris yaptiginda sistemi kullanabilir. Normal kullanici sistemi kullanamaz
 }
 
