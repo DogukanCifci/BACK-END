@@ -176,7 +176,7 @@ from .models import Student
 from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
 from rest_framework.generics import mixins,GenericAPIView, ListCreateAPIView,RetrieveUpdateDestroyAPIView
-from rest_framework.viewsets import ModelViewSet
+
 
 class StudentListCreate(APIView) :
     def get(self,request) :
@@ -281,6 +281,7 @@ class StudentDetailCV(RetrieveUpdateDestroyAPIView) :
 
 
 ##################### Model View Set ############################
+from rest_framework.viewsets import ModelViewSet
 class StudentMVS(ModelViewSet) :
     queryset = Student.objects.all()
     serializer_class = StudentSerializer
