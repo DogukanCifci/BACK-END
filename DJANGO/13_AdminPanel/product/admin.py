@@ -31,6 +31,55 @@ class ProductAdmin(admin.ModelAdmin) :
     prepopulated_fields = {'slug': ['name']} #Models'te olusturdugum slug'in name'i base alarak otomatik olusmasini istiyorum. Birden fazla sey ekleyebiliirm name'in yanina. Max_length 50 dir. Degistirilebilir. Slug otomatik olarak SEO'ya uygun bir url olusturur. O iteme tiklandiginda slugdaki isim neyse urlde o gözükür. 
 
 
+    #Inputlarin KONUMLANDIRILMASI :
+    #1. Method (Daha Sade)
+    """ fields = (
+        ('name', 'is_in_stock'), #Name ile is_in_stock kismi yan yana gelsin demek
+        ('slug'), #Slug yukardaki ikilinin altinda olsun
+        ('description'), #Description en altta olsun. 
+
+        #Bütün elementleri yazmak zorundayim. Yoksa hata ile karsilasiyorum.
+    ) """
+
+    #2 Method ayni anda kullanilmaz
+
+    #2. Method (Daha Detayli)
+
+
+    fieldsets = (
+        ('General:', {
+            # 'classes': ('',), # class Eklemek zorunda degiliz.
+            'fields': (
+                ('name', 'is_in_stock'),
+            ),
+            'description': 'Genel ayarları buradan yapabilirsiniz.'
+        }),
+        ('Details:', {
+            'classes': ('collapse','dogukan',), #css'te yazdigimiz class'i verir. collapse'Da acilir gizlenir menü özelligi verir. Dogukan classina ait css olmadigi icin bir özellik katmaz. Sonda , olmali cünkü tupple olmak zorunda
+            'fields': (
+                ('slug'),
+                ('description'),
+            ),
+            'description': 'Diğer ayarları buradan yapabilirsiniz.'
+        }),
+    )
+
+
+    # ------ Toplu islemlere Islem ekleme --------#
+    #action kisminda normalde sadece delete vardi. Buraya kendim de eklemlerde bulunabiliyorum..
+    def set_stock_in(self, request, queryset):
+        count = queryset.update(is_in_stock=True) # Kendi olusturdugum is_in_stock degerini queryset.update methodu ile güncelledim.
+        self.message_user(request, f'{count} adet "Stokta Var" olarak işaretlendi.') # islem gerceklestikten sonra yukarda olusacak mesaj icerigi
+    
+
+    def set_stock_out(self, request, queryset):
+        count = queryset.update(is_in_stock=False) 
+        self.message_user(request, f'{count} adet "Stokta Yok" olarak işaretlendi.')
+
+    actions = ('set_stock_in', 'set_stock_out')
+    set_stock_in.short_description = 'İşaretli ürünleri "Stokta Var" olarak Isaretler' #Action kisminda yazicak olan mesaj icerigi
+    set_stock_out.short_description = 'İşaretli ürünleri "Stokta Yok" olarak isaretle'
+
 #Call ;
 admin.site.register(Product, ProductAdmin) #1.degisken farkli 2.degisken farkli. Product kisminin admin panelindeki görüntüsünü degistirdik.
 
