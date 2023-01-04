@@ -88,6 +88,31 @@ class ProductAdmin(admin.ModelAdmin) :
         return different.days
 
     list_display += ['added_days_ago'] # Admin panelde gözüken diger sütunlar kaybolmadan ekleme yapilsin diye += yaptik. Ve en basta tupple degil liste yaptik. Cünkü tupple'a ekleme veya tupple'dan cikarma yapilmaz.
+
+
+
+### ------ TextField'i RichTextEditöre Dönüstürme ------ #####
+'''
+$ pip install django-ckeditor
+$ pip freeze > requirements.txt
+->settings.py ;
+INSTALLED_APPS = (
+    # ...
+    'ckeditor',
+    # ...
+)
+#----
+CKEDITOR_CONFIGS = {
+    'default' : {
+        'toolbar' : 'full',
+        'height' : 700,
+        'width' : 1000
+    }
+}
+
+#Daha sonra bu eklemeleri yapmaliyim.
+'''
+
 #Call ;
 admin.site.register(Product, ProductAdmin) #1.degisken farkli 2.degisken farkli. Product kisminin admin panelindeki görüntüsünü degistirdik.
 
