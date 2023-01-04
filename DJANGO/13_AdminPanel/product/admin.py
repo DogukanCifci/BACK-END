@@ -79,7 +79,15 @@ class ProductAdmin(admin.ModelAdmin) :
     actions = ('set_stock_in', 'set_stock_out')
     set_stock_in.short_description = 'İşaretli ürünleri "Stokta Var" olarak Isaretler' #Action kisminda yazicak olan mesaj icerigi
     set_stock_out.short_description = 'İşaretli ürünleri "Stokta Yok" olarak isaretle'
+    ##-----------------#####
 
+    ###-------- Extra Field Ekleme ---------###
+    def added_days_ago(self, object):
+        from django.utils import timezone
+        different = timezone.now() - object.create_date
+        return different.days
+
+    list_display += ['added_days_ago'] # Admin panelde gözüken diger sütunlar kaybolmadan ekleme yapilsin diye += yaptik. Ve en basta tupple degil liste yaptik. Cünkü tupple'a ekleme veya tupple'dan cikarma yapilmaz.
 #Call ;
 admin.site.register(Product, ProductAdmin) #1.degisken farkli 2.degisken farkli. Product kisminin admin panelindeki görüntüsünü degistirdik.
 
