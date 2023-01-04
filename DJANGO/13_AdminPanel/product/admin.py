@@ -1,9 +1,12 @@
 from django.contrib import admin
 from .models import *
 
-
-# ------------------ Product Admin ---------------------#
-
+## ---------------- Tabular Inline ------------- ###
+class ReviewInline(admin.TabularInline) : # or admin.StackedInline -> Sadece görüntü farki var
+    model = Review
+    extra =1
+    classes = ('collapse',)
+#-------------------------Product Admin-----------------------##
 class ProductAdmin(admin.ModelAdmin) :
     #Tablo Sütunlari :
     list_display = [ 'id', 'name', 'is_in_stock', 'slug', 'create_date', 'update_date'] 
@@ -81,6 +84,11 @@ class ProductAdmin(admin.ModelAdmin) :
     set_stock_out.short_description = 'İşaretli ürünleri "Stokta Yok" olarak isaretle'
     ##-----------------#####
 
+
+    ######### RELATED_name ile olusturdugum alt kayitlari TabularInline ile gösterme :
+    inlines = [ReviewInline]
+
+
     ###-------- Extra Field Ekleme ---------###
     def added_days_ago(self, object):
         from django.utils import timezone
@@ -90,6 +98,11 @@ class ProductAdmin(admin.ModelAdmin) :
     list_display += ['added_days_ago'] # Admin panelde gözüken diger sütunlar kaybolmadan ekleme yapilsin diye += yaptik. Ve en basta tupple degil liste yaptik. Cünkü tupple'a ekleme veya tupple'dan cikarma yapilmaz.
 
 
+    #viewsleri related name ile eklemek istiyorum. Yani yeni bir field daha ;
+    def how_many_reviews(self,object) :
+        return object.reviews.count()  #reviews modelste yazdigim related_name ile ayni olmak zorunda
+
+    list_display += ['how_many_reviews']
 
 ### ------ TextField'i RichTextEditöre Dönüstürme ------ #####
 '''
@@ -116,3 +129,11 @@ CKEDITOR_CONFIGS = {
 #Call ;
 admin.site.register(Product, ProductAdmin) #1.degisken farkli 2.degisken farkli. Product kisminin admin panelindeki görüntüsünü degistirdik.
 
+class ReviewAdminPanel(admin.ModelAdmin) :
+    list_display = ['__str__', 'created_date','is_released']
+    list_per_page = 20
+    raw_id_fields = ('product',) #Normalde isim gözüküyro ürünü secerken. Eger bunu yaparsam hem id'sini gösterecek hem de idsini
+admin.site.register(Review,ReviewAdminPanel)
+
+
+#Burada da FixAdmin diye kendim bir tanimlama yapip, eger birden fazla model icin ayni seyleri kullanacaksak onlari Fix'e yazabiliriz. Daha sonra FixAdmin inherit edilebilir.
