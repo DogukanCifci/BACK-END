@@ -121,7 +121,17 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
+# Hazirdaki static ' i sildim bunu yazdim. Resim ekleyebilmek icin ;
+import os
+
 STATIC_URL = 'static/'
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
+# STATIC_ROOT = os.path.join(BASE_DIR, "static")
+
+MEDIA_URL = 'media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
@@ -130,10 +140,28 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 #My Adding ;
+#1.yöntem Cok karmasik gözüküyor
+# CKEDITOR_CONFIGS = {
+#     'default' : {
+#         'toolbar' : 'full',
+#         'height' : 300,
+#         'width' : '100%'
+#     }
+# }
+
+
+#2. yöntem. Sadelestirilmis hali
+# https://django-ckeditor.readthedocs.io/
 CKEDITOR_CONFIGS = {
     'default' : {
-        'toolbar' : 'full',
-        'height' : 700,
-        'width' : 1000
+        'toolbar': 'Custom',
+        'toolbar_Custom': [
+            ['Bold', 'Italic', 'Underline'],
+            ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'],
+            ['Link', 'Unlink'],
+            ['RemoveFormat', 'Source']
+        ],
+        'height': '400px',
+        'width': '100%'
     }
 }

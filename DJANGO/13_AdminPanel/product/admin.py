@@ -1,6 +1,12 @@
 from django.contrib import admin
 from .models import *
 
+admin.site.site_title = 'Clarusway Title' # <title>
+admin.site.site_header = 'Clarusway Admin Portal' # <navbar>
+admin.site.index_title = "Welcome to Clarusway Admin Portal" 
+#Category Admin
+admin.site.register(Category)
+
 ## ---------------- Tabular Inline ------------- ###
 class ReviewInline(admin.TabularInline) : # or admin.StackedInline -> Sadece görüntü farki var
     model = Review
@@ -40,7 +46,7 @@ class ProductAdmin(admin.ModelAdmin) :
         ('name', 'is_in_stock'), #Name ile is_in_stock kismi yan yana gelsin demek
         ('slug'), #Slug yukardaki ikilinin altinda olsun
         ('description'), #Description en altta olsun. 
-
+        ('category'),
         #Bütün elementleri yazmak zorundayim. Yoksa hata ile karsilasiyorum.
     ) """
 
@@ -48,12 +54,13 @@ class ProductAdmin(admin.ModelAdmin) :
 
     #2. Method (Daha Detayli)
 
-
+    readonly_fields = ['view_image'] #Bunu yazmazsam hata verir. -->Admin Panel detail sayfasinda görünmesi icin yazdim. Ama resmi DB'ye göndermeyecegi icin read_only apmak zorundayim.
     fieldsets = (
         ('General:', {
             # 'classes': ('',), # class Eklemek zorunda degiliz.
             'fields': (
                 ('name', 'is_in_stock'),
+                ('category'),
             ),
             'description': 'Genel ayarları buradan yapabilirsiniz.'
         }),
@@ -61,12 +68,15 @@ class ProductAdmin(admin.ModelAdmin) :
             'classes': ('collapse','dogukan',), #css'te yazdigimiz class'i verir. collapse'Da acilir gizlenir menü özelligi verir. Dogukan classina ait css olmadigi icin bir özellik katmaz. Sonda , olmali cünkü tupple olmak zorunda
             'fields': (
                 ('slug'),
+                ('image','view_image'), ###view_image'i admin panael detail'e girince image yükleme yerinin yaninda resim de gözüksün diye yazdik. view_image asagida kendim fonksiyon olustudum html kodlari ile.
                 ('description'),
             ),
-            'description': 'Diğer ayarları buradan yapabilirsiniz.'
+            'description': 'Diğer ayarları buradan yapabilirsiniz.',
+            
         }),
     )
-
+    filter_horizontal = ('category',) #bu yatay veya 
+   # filter_vertical = ('category',) # bu da dikey
 
     # ------ Toplu islemlere Islem ekleme --------#
     #action kisminda normalde sadece delete vardi. Buraya kendim de eklemlerde bulunabiliyorum..
@@ -96,15 +106,36 @@ class ProductAdmin(admin.ModelAdmin) :
         return different.days
 
     list_display += ['added_days_ago'] # Admin panelde gözüken diger sütunlar kaybolmadan ekleme yapilsin diye += yaptik. Ve en basta tupple degil liste yaptik. Cünkü tupple'a ekleme veya tupple'dan cikarma yapilmaz.
-
+    added_days_ago.short_description = "DAYS"
 
     #viewsleri related name ile eklemek istiyorum. Yani yeni bir field daha ;
     def how_many_reviews(self,object) :
         return object.reviews.count()  #reviews modelste yazdigim related_name ile ayni olmak zorunda
 
     list_display += ['how_many_reviews']
+    how_many_reviews.short_description = "reviewed"
 
-### ------ TextField'i RichTextEditöre Dönüstürme ------ #####
+    ### Extra Field Ekleme ------ Resim Icin -------#####
+    def view_image_in_list(self,object) :
+        from django.utils.safestring import mark_safe #HTML Codelarini yazabilmem icin bunu import etmeliyim
+        if object.image :
+            return mark_safe(f'<a href="{object.image.url}" target="_blank"><img src={object.image.url} style="height:30px ; width:30px;" /></a>')
+
+    list_display = ['view_image_in_list'] + list_display #----->>> += yapsam list_display = list_display + ['view_image_in_list']  resimi en sona atardi. En basa alsin diye bu sekilde yazdim.
+   
+    view_image_in_list.short_description = "Image"  #Admin panelde görünen baslik fonksiyon adi ile ayni gözükür. Onu degistirmek icin her zaman bu method kullanilabilir
+
+    ##Show Image in Admin Panel > Details Part----
+    def view_image(self,object) :
+        from django.utils.safestring import mark_safe #HTML Codelarini yazabilmem icin bunu import etmeliyim
+        if object.image :
+            return mark_safe(f'<a href="{object.image.url}" target="_blank"><img src={object.image.url} style="max-height:200px ; max-width:200px;" /></a>')
+    ###view_image_in_list ile ayni fonksiyon. Tekrar yazmamin sebebi detail sayfasinda 30px 30px olmasin daha büyük olsun diye burda boyutlari degistirecegim. Yoksa tekrar yazmak zorunda degilim
+
+
+
+   
+    ### ------ TextField'i RichTextEditöre Dönüstürme ------ #####
 '''
 $ pip install django-ckeditor
 $ pip freeze > requirements.txt
@@ -123,7 +154,7 @@ CKEDITOR_CONFIGS = {
     }
 }
 
-#Daha sonra bu eklemeleri yapmaliyim.
+#Daha sonra bu eklemeleri yapmaliyim. Daha sonra modelsede TextField ve models silip Direk RichTextField yazmam gerekiyor.
 '''
 
 #Call ;
@@ -137,3 +168,4 @@ admin.site.register(Review,ReviewAdminPanel)
 
 
 #Burada da FixAdmin diye kendim bir tanimlama yapip, eger birden fazla model icin ayni seyleri kullanacaksak onlari Fix'e yazabiliriz. Daha sonra FixAdmin inherit edilebilir.
+
