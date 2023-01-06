@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'product',
     #thirdparty apps ;
     'ckeditor',
+    'django-admin-list-filter-dropdown', ##admin panelindeki nameleri filtrelemek icin $ pip install django-admin-list-filter-dropdown 'den sonra ekliyorum
 
 ]
 
@@ -60,7 +61,8 @@ ROOT_URLCONF = 'main.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        # 'DIRS': [],
+        'DIRS': [BASE_DIR, "templates"], #Templatelerde bir degisiklik yapmak istersem bu sekilde yazmaliyim. Normali bir üst satidaki gibi
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

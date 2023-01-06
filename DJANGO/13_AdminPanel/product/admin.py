@@ -13,6 +13,9 @@ class ReviewInline(admin.TabularInline) : # or admin.StackedInline -> Sadece gö
     extra =1
     classes = ('collapse',)
 #-------------------------Product Admin-----------------------##
+
+from django_admin_listfilter_dropdown.filters import RelatedDropdownFilter,DropdownFilter
+
 class ProductAdmin(admin.ModelAdmin) :
     #Tablo Sütunlari :
     list_display = [ 'id', 'name', 'is_in_stock', 'slug', 'create_date', 'update_date'] 
@@ -20,7 +23,7 @@ class ProductAdmin(admin.ModelAdmin) :
     list_display_links = ['id', 'name'] #Normalde modelin icindeki ürün vb detayina gitmek icin bize default olarak sadece id'ye tiklama izni veriyor. Istersek bu sekilde baska baslik da atayabiliriz.
     #!!!!Ayni sütun basligi hem editable da hem de links de kullanilamaz.
 
-    list_filter = ['is_in_stock', 'create_date'] #Sag tarafta filtre yeri cikar. Sadece truelari ya da flaselari göster gibi. veya bugün kayit olmus, 7 gün önce olmus vb gibi....
+    list_filter = [('name', DropdownFilter),'is_in_stock', 'create_date'] #Sag tarafta filtre yeri cikar. Sadece truelari ya da flaselari göster gibi. veya bugün kayit olmus, 7 gün önce olmus vb gibi....
 
     search_fields = ['id','name'] #id ve name'e göre arama butonu cikartir. iceren bir harf veya sayi girersek direk algilar
     search_help_text = "Arama islemlerini buradan yapabilirsiniz" #Butonun altinda helper text olusturur.
