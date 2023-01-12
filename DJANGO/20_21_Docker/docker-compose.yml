@@ -1,0 +1,28 @@
+#version: "3.9" #optional
+services:
+  frontend:
+    container_name: frontend
+    image: docker-compose-frontend
+    build: ./frontend
+    ports:
+      - 3000:3000
+      - 80:3000
+    restart: on-failure
+    depends_on:
+      - backend #önce backendi calistir demek
+
+  backend:
+    #container_name: backend #optional (default : key(yani backend: yaptigim icin key'De backend oluyor.))
+    image: docker-compose-backend #image yoksa olusturacak
+    build: ./backend ###project folder !!backend klasörünün icinde dockerfile dosyasi kesinlikle olmali
+    ports:
+      - 8000:8000 #external:internal portlarim
+    restart: on-failure #Hata durumunda tekrar calistir anlamina geliyor.
+    volumes:
+      - $PWD/backend/db.sqlite3:/backend/db.sqlite3 #Veri kaybi yasamamak icin localdeki sqlite ile images'deki sqlite eslestir.websitesinde ekleme cikarma yapildiginda images dbde degisiklik olur. Onu localimizdekine de aktarmak icin bunu yazmaliyiz. yoksa containerler silinip tekrar olusturuldugunda veriler kaybolur. Images'de kendi icinde kendi dbsini olusturuyor cünkü
+
+# $ docker compose up # compose çalıştır.
+# $ docker compose up -d #eger images ve containers varsa terminali kitlemeden calistir.
+# $ docker compose down # compose kapat. # Terminal kitliyken kapatma komutu. Terminal kitli degilken command+c ile kapatabiliyorum zaten.
+# $ docker compose up -d --build # compose daemon aç ve tekrar build et. imageler varsa ve eger containerlar yoksa bu yazilabilir..  Daah kisa sürer. Hem images hem de containers yoksa yine bu yazilir.
+# $ docker compose down -v # compose tümünü kapat.
