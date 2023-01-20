@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     # Internal Modules:
+     'drf_yasg', #---> swagger icin
     'rest_framework',
     'rest_framework.authtoken',
     'dj_rest_auth',
@@ -168,3 +169,5 @@ CORS_ALLOW_METHODS = [
     "POST",
     "PUT",
 ]
+
+# SWAGGER_SETTINGS = { "DEFAULT_GENERATOR_CLASS": "rest_framework.schemas.generators.BaseSchemaGenerator", }
